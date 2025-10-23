@@ -5,8 +5,7 @@ import logging
 class ProductDatabasePipeline:
     async def open_spider(self, spider):
         self.db = await aiosqlite.connect("products.db")
-        self.cursor = await self.db.cursor()
-        await self.cursor.execute('''
+        async with self.db.execute('''
             CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 url TEXT UNIQUE,
@@ -18,7 +17,8 @@ class ProductDatabasePipeline:
                 img TEXT,
                 information TEXT
             )
-        ''')
+        '''):
+            pass
         await self.db.commit()
         logging.info("Database connection opened and table created.")
 
@@ -30,7 +30,7 @@ class ProductDatabasePipeline:
         try:
             information_json = json.dumps(item.get('information', []))
 
-            await self.cursor.execute('''
+            async with self.db.execute('''
                 INSERT OR REPLACE INTO products (url, title, price, stars, rating, category, img, information)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
@@ -42,10 +42,14 @@ class ProductDatabasePipeline:
                 item.get('category', ''),
                 item.get('img', ''),
                 information_json
-            ))
+            )):
+                pass
             await self.db.commit()
-            logging.info(f"Item stored in database: {item['title']}")
+            logging.info(f"Item stored in database: {item.get('title', '')}")
         except Exception as e:
             logging.error(f"Failed to store item: {e}")
 
         return item
+
+
+
