@@ -243,7 +243,7 @@ class ProSpider(scrapy.Spider):
                         pass # Ignore non-JSON responses
 
             # Attach the response handler
-            await page.on("response", handle_response)
+            page.on("response", handle_response)
             # Wait for network activity to settle after initial load
             await page.wait_for_load_state('networkidle', timeout=15000)
 
@@ -311,7 +311,7 @@ class ProSpider(scrapy.Spider):
         finally:
             # Remove the network listener to prevent resource leakage
             if page:
-                await page.remove_listener("response", handle_response)
+                page.remove_listener("response", handle_response)
             # Close the Playwright page
             if page and not page.is_closed():
                 await page.close()
