@@ -38,10 +38,10 @@ PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 90000
 # }
 # ---------- Spider middlewares ----------
 DOWNLOADER_MIDDLEWARES = {
-   "product_amazon.middlewares.FakeHeaders": 300,
+   "product.middlewares.FakeHeaders": 300,
 }
 ITEM_PIPELINES = {
-   'product_amazon.pipelines.ProductDatabasePipeline': 200,
+   'product.pipelines.ProductDatabasePipeline': 200,
 }
 # ---------- AutoThrottle ----------
 AUTOTHROTTLE_ENABLED = True
