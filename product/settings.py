@@ -1,7 +1,7 @@
 # ______ BOT _______
 BOT_NAME = "product_amazon"
-SPIDER_MODULES = ["product_amazon.spiders"]
-NEWSPIDER_MODULE = "product_amazon.spiders"
+SPIDER_MODULES = ["product.spiders"]
+NEWSPIDER_MODULE = "product.spiders"
 ADDONS = {}
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
