@@ -33,7 +33,7 @@ class ProductSpider(scrapy.Spider):
     asins_seen_global = set()
 
     def start_requests(self):
-        urls = {'gaming':'https://www.amazon.com/s?k=gaming'}
+        urls = {'gaming':f'https://www.amazon.com/s?k=gaming'}
 
         for category,url in urls.items():
             yield scrapy.Request(url=url, meta=dict(playwright=True,playwright_include_page=True,name=category,
@@ -113,6 +113,7 @@ class ProductSpider(scrapy.Spider):
             if page and not page.is_closed():
                 await page.close()
 
+
     async def parse_product_page(self, response):
         page = response.meta.get('playwright_page')
         category_name = response.meta['name']
@@ -170,10 +171,20 @@ class ProductSpider(scrapy.Spider):
                 rating_element = html_tree.css_first('span#acrCustomerReviewText')
                 item['rating'] = rating_element.text(strip=True) if rating_element else ''
 
-                overview_elements = html_tree.css('div[id*="productOverview_feature"]')
+                overview_elements = html_tree.css_first('div[id*="productOverview_feature"]')
+                if overview_elements:
+                    rows = overview_elements.css('tr')
 
-                item['information'] = [[tr.text(deep=True, strip=True, separator=" | ") for tr in info.css('tr')]
-                                       for info in overview_elements]
+                    info_ = []
+                    for row in rows:
+                        key_ = row.css_first('td:nth-child(1)')
+                        key = key_.text(deep=True,strip=True)
+                        value_ = row.css_first('td:nth-child(2)')
+                        value = value_.text(deep=True,strip=True)
+                        info_.append(f'{key} : {value}')
+
+                    info = ' | '.join(info_)
+                    item['information'] = info
 
                 img_elements = html_tree.css_first('div[id="imgTagWrapperId"] > img')
                 item['img'] = img_elements.attributes.get('src') if img_elements else ''
@@ -232,7 +243,7 @@ class ProductSpider(scrapy.Spider):
                             timeout=90000)]), callback=self.parse_product_page, errback=self.error_handler)
 
         except Exception as e:
-            self.logger.error(f"Error in parse_product_page for {response.url}: {e}")
+            self.logger.error(f"parse_product_page for {response.url}: {e}")
 
         finally:
             if page:
@@ -240,4 +251,4 @@ class ProductSpider(scrapy.Spider):
             if page and not page.is_closed():
                 await page.close()
 
-# scrapy crawl product 
+# scrapy crawl product -O pro.json
