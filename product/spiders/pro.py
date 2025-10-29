@@ -110,7 +110,8 @@ class ProductSpider(scrapy.Spider):
             self.logger.info("finish page")
 
         finally:
-            await page.close()
+            if page and not page.is_closed():
+                await page.close()
 
     async def parse_product_page(self, response):
         page = response.meta.get('playwright_page')
