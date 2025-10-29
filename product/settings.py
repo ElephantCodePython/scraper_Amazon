@@ -41,7 +41,7 @@ DOWNLOADER_MIDDLEWARES = {
    "product.middlewares.FakeHeaders": 300,
 }
 ITEM_PIPELINES = {
-   'product.pipelines.ProductDatabasePipeline': 200,
+   'product.pipelines.ProductAmazonPipeline': 200,
 }
 # ---------- AutoThrottle ----------
 AUTOTHROTTLE_ENABLED = True
