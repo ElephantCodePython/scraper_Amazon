@@ -33,9 +33,7 @@ class ProductSpider(scrapy.Spider):
     asins_seen_global = set()
 
     def start_requests(self):
-        urls = {'gaming':'https://www.amazon.com/s?k=gaming&_encoding=UTF8&content-id=amzn1.sym.edf433e2-b6d4-408e-986d-'
-                         '75239a5ced10&pd_rd_r=3196dae8-0460-4d41-a27e-2dd101aa8a98&pd_rd_w=cnfz5&pd_rd_wg=4lfUv&pf_rd_p='
-                         'edf433e2-b6d4-408e-986d-75239a5ced10&pf_rd_r=CPHF16Y8AT4XFBB1AZYF&ref=pd_hp_d_atf_unk'}
+        urls = {'gaming':'https://www.amazon.com/s?k=gaming'}
 
         for category,url in urls.items():
             yield scrapy.Request(url=url, meta=dict(playwright=True,playwright_include_page=True,name=category,
