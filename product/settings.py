@@ -1,5 +1,5 @@
 # ______ BOT _______
-BOT_NAME = "product_amazon"
+BOT_NAME = "product"
 SPIDER_MODULES = ["product.spiders"]
 NEWSPIDER_MODULE = "product.spiders"
 ADDONS = {}
